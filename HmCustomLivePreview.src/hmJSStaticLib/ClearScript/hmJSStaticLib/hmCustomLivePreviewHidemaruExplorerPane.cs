@@ -1,6 +1,7 @@
 ﻿// ★秀丸クラス
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public sealed partial class HmCustomLivePreviewDynamicLib
 {
@@ -85,10 +86,22 @@ public sealed partial class HmCustomLivePreviewDynamicLib
             {
                 try
                 {
-                    if (HmCustomLivePreviewDynamicLib.Hidemaru.Macro.IsExecuting)
+                    IntPtr startpointer = pExplorerPane_GetProject(Hidemaru.WindowHandle);
+                    List<byte> blist = GetPointerToByteArray(startpointer);
+
+                    string project_name = Hidemaru.HmOriginalDecodeFunc.DecodeOriginalEncodeVector(blist);
+
+                    if (String.IsNullOrEmpty(project_name))
+                    {
+                        return null;
+                    }
+                    return project_name;
+
+                    /*
+                    if (hmJSDynamicLib.Hidemaru.Macro.IsExecuting)
                     {
                         string cmd = @"dllfuncstr(loaddll(""HmExplorerPane""), ""GetProject"", hidemaruhandle(0))";
-                        string project_name = (string)HmCustomLivePreviewDynamicLib.Hidemaru.Macro.Var(cmd);
+                        string project_name = (string)hmJSDynamicLib.Hidemaru.Macro.Var(cmd);
                         if (String.IsNullOrEmpty(project_name))
                         {
                             return null;
@@ -98,7 +111,7 @@ public sealed partial class HmCustomLivePreviewDynamicLib
                     else
                     {
                         string cmd = @"endmacro dllfuncstr(loaddll(""HmExplorerPane""), ""GetProject"", hidemaruhandle(0))";
-                        var result = HmCustomLivePreviewDynamicLib.Hidemaru.Macro.ExecEval(cmd);
+                        var result = hmJSDynamicLib.Hidemaru.Macro.ExecEval(cmd);
                         string project_name = result.Message;
                         if (String.IsNullOrEmpty(project_name))
                         {
@@ -106,6 +119,7 @@ public sealed partial class HmCustomLivePreviewDynamicLib
                         }
                         return result.Message;
                     }
+                    */
                 }
                 catch (Exception e)
                 {
@@ -113,6 +127,29 @@ public sealed partial class HmCustomLivePreviewDynamicLib
                 }
 
                 return null;
+            }
+
+            private static List<byte> GetPointerToByteArray(IntPtr startpointer)
+            {
+                List<byte> blist = new List<byte>();
+
+                int index = 0;
+                while (true)
+                {
+                    var b = Marshal.ReadByte(startpointer, index);
+
+                    blist.Add(b);
+
+                    // 文字列の終端はやはり0
+                    if (b == 0)
+                    {
+                        break;
+                    }
+
+                    index++;
+                }
+
+                return blist;
             }
 
             // GetCurrentDirする
@@ -125,12 +162,24 @@ public sealed partial class HmCustomLivePreviewDynamicLib
                 }
                 try
                 {
-                    if (HmCustomLivePreviewDynamicLib.Hidemaru.pExplorerPane_GetCurrentDir != null)
+                    IntPtr startpointer = pExplorerPane_GetCurrentDir(Hidemaru.WindowHandle);
+                    List<byte> blist = GetPointerToByteArray(startpointer);
+
+                    string currentdir_name = Hidemaru.HmOriginalDecodeFunc.DecodeOriginalEncodeVector(blist);
+
+                    if (String.IsNullOrEmpty(currentdir_name))
                     {
-                        if (HmCustomLivePreviewDynamicLib.Hidemaru.Macro.IsExecuting)
+                        return null;
+                    }
+                    return currentdir_name;
+
+                    /*
+                    if (hmJSDynamicLib.Hidemaru.pExplorerPane_GetCurrentDir != null)
+                    {
+                        if (hmJSDynamicLib.Hidemaru.Macro.IsExecuting)
                         {
                             string cmd = @"dllfuncstr(loaddll(""HmExplorerPane""), ""GetCurrentDir"", hidemaruhandle(0))";
-                            string currentdir_name = (string)HmCustomLivePreviewDynamicLib.Hidemaru.Macro.Var(cmd);
+                            string currentdir_name = (string)hmJSDynamicLib.Hidemaru.Macro.Var(cmd);
                             if (String.IsNullOrEmpty(currentdir_name))
                             {
                                 return null;
@@ -140,7 +189,7 @@ public sealed partial class HmCustomLivePreviewDynamicLib
                         else
                         {
                             string cmd = @"endmacro dllfuncstr(loaddll(""HmExplorerPane""), ""GetCurrentDir"", hidemaruhandle(0))";
-                            var result = HmCustomLivePreviewDynamicLib.Hidemaru.Macro.ExecEval(cmd);
+                            var result = hmJSDynamicLib.Hidemaru.Macro.ExecEval(cmd);
                             string currentdir_name = result.Message;
                             if (String.IsNullOrEmpty(currentdir_name))
                             {
@@ -149,6 +198,7 @@ public sealed partial class HmCustomLivePreviewDynamicLib
                             return result.Message;
                         }
                     }
+                    */
                 }
                 catch (Exception e)
                 {
