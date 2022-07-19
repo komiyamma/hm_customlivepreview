@@ -162,6 +162,7 @@
     <Compile Include="JS\HostItem.cs" />
     <Compile Include="JS\HostVariable.cs" />
     <Compile Include="JS\Windows\JScriptEngine.cs" />
+    <None Include="app.config" />
     <None Include="JS\Exports\CallbackManager.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CallbackManager.h</LastGenOutput>
