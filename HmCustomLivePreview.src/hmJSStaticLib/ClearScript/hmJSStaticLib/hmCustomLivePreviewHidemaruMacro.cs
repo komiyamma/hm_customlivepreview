@@ -337,10 +337,19 @@ public partial class HmCustomLivePreviewDynamicLib
                             else
                             {
                                 // 次に少数でトライ
-                                Double dtmp = 0;
-                                success = Double.TryParse(value.ToString(), out dtmp);
+                                double dtmp = 0;
+                                if (IsDoubleNumeric(value))
+                                {
+                                    dtmp = (double)value;
+                                    success = true;
+                                }
+                                else
+                                {
+                                    success = double.TryParse(value.ToString(), out dtmp);
+                                }
                                 if (success)
                                 {
+                                    dtmp = HmClamp<double>(dtmp, Int32.MinValue, Int32.MaxValue);
                                     normalized_arg = (Int32)(dtmp);
                                 }
 
@@ -366,10 +375,20 @@ public partial class HmCustomLivePreviewDynamicLib
                             else
                             {
                                 // 次に少数でトライ
-                                Double dtmp = 0;
-                                success = Double.TryParse(value.ToString(), out dtmp);
+                                double dtmp = 0;
+                                if (IsDoubleNumeric(value))
+                                {
+                                    dtmp = (double)value;
+                                    success = true;
+                                }
+                                else
+                                {
+                                    success = double.TryParse(value.ToString(), out dtmp);
+                                }
+
                                 if (success)
                                 {
+                                    dtmp = HmClamp<double>(dtmp, Int64.MinValue, Int64.MaxValue);
                                     normalized_arg = (Int64)(dtmp);
                                 }
                                 else
@@ -497,18 +516,58 @@ public partial class HmCustomLivePreviewDynamicLib
                     arg_keys.Add(l.Key);
                 }
 
+                tmpVar = null;
+                int dll = iDllBindHandle;
+
+                if (dll == 0)
+                {
+                    throw new NullReferenceException(ErrorMsg.NoDllBindHandle866);
+                }
+
                 // それを「,」で繋げる
                 string args_string = String.Join(", ", arg_keys);
                 // それを指定の「文」で実行する形
                 string expression = $"{funcname} {args_string};\n";
 
+                String invocate = ModifyFuncCallByDllType("{0}");
+                String cmd = "" +
+                expression +
+                "##_tmp_dll_id_ret = dllfuncw( " + invocate + " \"SetTmpVar\", result);\n" +
+                "##_tmp_dll_id_ret = 0;\n";
+
                 // 実行する
-                IResult ret = HmCustomLivePreviewDynamicLib.Hidemaru.Macro.Eval(expression);
+                IResult ret = HmCustomLivePreviewDynamicLib.Hidemaru.Macro.Eval(cmd);
                 ExecStateResult result = new ExecStateResult();
                 result.Result = ret.Result;
                 result.Error = ret.Error;
                 result.Message = ret.Message;
                 result.Args = new List<object>();
+
+                int macro_result = 0;
+                if (IntPtr.Size == 4)
+                {
+                    macro_result = (Int32)tmpVar + 0; // 確実に複製を
+                }
+                else
+                {
+                    Int64 macro_result64 = (Int64)tmpVar + 0; // 確実に複製を
+                    Int32 macro_result32 = (Int32)HmClamp<Int64>(macro_result64, Int32.MinValue, Int32.MaxValue);
+                    macro_result = (Int32)macro_result32;
+                }
+
+                if (result.Error == null)
+                {
+                    if (macro_result <= 0)
+                    {
+                        result.Error = new InvalidOperationException("HidemaruMacroResultZeroException");
+                        result.Result = macro_result;
+                    }
+                    else
+                    {
+                        result.Result = macro_result;
+                    }
+                }
+                tmpVar = null; // クリア
 
                 // 成否も含めて結果を入れる。
                 // new TResult(ret.Result, ret.Message, ret.Error);
@@ -764,6 +823,7 @@ public partial class HmCustomLivePreviewDynamicLib
 
 
             // マクロ文字列の実行。複数行を一気に実行可能
+            // マクロ文字列の実行。複数行を一気に実行可能
             public static Object Var(String var_name, Object value = null)
             {
                 // 読み取りであれば…
@@ -863,13 +923,21 @@ public partial class HmCustomLivePreviewDynamicLib
                             else
                             {
                                 // 次に少数でトライ
-                                Double dtmp = 0;
-                                success = Double.TryParse(value.ToString(), out dtmp);
+                                double dtmp = 0;
+                                if (IsDoubleNumeric(value))
+                                {
+                                    dtmp = (double)value;
+                                    success = true;
+                                }
+                                else
+                                {
+                                    success = double.TryParse(value.ToString(), out dtmp);
+                                }
                                 if (success)
                                 {
+                                    dtmp = HmClamp<double>(dtmp, Int32.MinValue, Int32.MaxValue);
                                     result = (Int32)(dtmp);
                                 }
-
                                 else
                                 {
                                     result = 0;
@@ -892,10 +960,19 @@ public partial class HmCustomLivePreviewDynamicLib
                             else
                             {
                                 // 次に少数でトライ
-                                Double dtmp = 0;
-                                success = Double.TryParse(value.ToString(), out dtmp);
+                                double dtmp = 0;
+                                if (IsDoubleNumeric(value))
+                                {
+                                    dtmp = (double)value;
+                                    success = true;
+                                }
+                                else
+                                {
+                                    success = double.TryParse(value.ToString(), out dtmp);
+                                }
                                 if (success)
                                 {
+                                    dtmp = HmClamp<double>(dtmp, Int64.MinValue, Int64.MaxValue);
                                     result = (Int64)(dtmp);
                                 }
                                 else
