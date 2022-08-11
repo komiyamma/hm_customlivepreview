@@ -230,9 +230,11 @@ public sealed partial class HmCustomLivePreviewDynamicLib
 
                 // ヒアドキュメント用の関数 R(text)
                 String expression = @"
-                function R(text){
-                    return text.toString().match(/\/\*([\s\S]*)\*\//)[1].toString();
-                }
+require = hm.require;
+
+function R(text){
+    return text.toString().match(/\/\*([\s\S]*)\*\//)[1].toString();
+}
                 ";
                 engine.Execute(expression);
 
