@@ -160,6 +160,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hidemaruexe_export.cpp" />
     <ClCompile Include="hidemaruexe_handle.cpp" />
     <ClCompile Include="hmCustomLivePreview.cpp" />

@@ -31,6 +31,11 @@ public class ICustomLivePreviewStaticLib
         return HmCustomLivePreviewDynamicLib.BindDllHandle(dll);
     }
 
+    public static void SetJSModeExpression(String str)
+    {
+        HmCustomLivePreviewDynamicLib.SetJSModeExpression(str);
+    }
+
     public static void SetCodePage(IntPtr cp)
     {
         HmCustomLivePreviewDynamicLib.SetCodePage(cp);
@@ -181,6 +186,13 @@ public sealed partial class HmCustomLivePreviewDynamicLib
     {
         iDllBindHandle = dll.ToInt32();
         return dll;
+    }
+
+    static bool isJSModeLoaded = false;
+    static string strJSModeExpression = "";
+    public static void SetJSModeExpression(String str)
+    {
+        strJSModeExpression = str;
     }
 
     // dllのloaddllタイプによって、渡されたcmd(=expression)に対して、「dllの番号,」or「」を当てはめる処理
@@ -579,6 +591,12 @@ function R(text){
 
         try
         {
+            if (!isJSModeLoaded)
+            {
+                isJSModeLoaded = true;
+                engine.Evaluate(strJSModeExpression);
+            }
+
             // 文字列からソース生成
             engine.Evaluate(expression);
             return (IntPtr)1;
@@ -668,6 +686,7 @@ function R(text){
 
         SetCodePage((IntPtr)default_codepage);
         iDllBindHandle = 0;
+        isJSModeLoaded = false;
         tmpVar = null;
 
         dpr = null;

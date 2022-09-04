@@ -35,6 +35,9 @@
     <ClCompile Include="hidemaruexe_handle.cpp">
       <Filter>秀丸本体のexeの関数やバージョン</Filter>
     </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>hmJS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="string_converter.h">
