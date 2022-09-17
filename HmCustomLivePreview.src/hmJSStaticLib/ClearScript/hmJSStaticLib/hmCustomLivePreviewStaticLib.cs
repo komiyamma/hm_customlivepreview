@@ -247,6 +247,14 @@ require = hm.require;
 function R(text){
     return text.toString().match(/\/\*([\s\S]*)\*\//)[1].toString();
 }
+
+function _stringify_replacer(key, value) {
+    if (typeof value === ""function"") {
+        return ""[fn]:"" + value.toString();
+        }
+    return value;
+}
+
                 ";
                 engine.Execute(expression);
 
