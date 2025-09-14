@@ -1,6 +1,6 @@
 # HmCustomLivePreview
 
-![HmCustomLivePreview v2.0.1](https://img.shields.io/badge/HmCustomLivePreview-v2.0.1-6479ff.svg)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/komiyamma/hm_customlivepreview?label=HmCustomLivePreview&color=6479ff)](https://github.com/komiyamma/hm_customlivepreview/releases)
 [![Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg?style=flat)](LICENSE)
 ![Hidemaru 8.73](https://img.shields.io/badge/Hidemaru-v8.73-6479ff.svg)
 
