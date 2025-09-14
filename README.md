@@ -1,6 +1,6 @@
 # HmCustomLivePreview
 
-![HmCustomLivePreview v2.0.1](https://img.shields.io/badge/HmCustomLivePreview-v2.0.1-6479ff.svg)
+![HmCustomLivePreview v2.0.1](https://img.shields.io/badge/HmCustomLivePreview-v2.0.1-6479ff.svg) ←ここはrelese ビルドのバージョンから取得しては？
 [![Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg?style=flat)](LICENSE)
 ![Hidemaru 8.73](https://img.shields.io/badge/Hidemaru-v8.73-6479ff.svg)
 
